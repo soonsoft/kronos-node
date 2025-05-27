@@ -1,0 +1,24 @@
+{
+  "name": "dataset-tools",
+  "version": "1.0.0",
+  "description": "参数训练WebUI",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "package": "node ./scripts/god-package.mjs",
+    "prestart": "node ./scripts/god-package.mjs",
+    "start": "node ./server/app.mjs",
+    "test": "node ./server/test/start.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@koa/router": "^13.1.0",
+    "koa": "^3.0.0",
+    "koa-body": "^6.0.1",
+    "koa-logger": "^3.2.1",
+    "koa-session": "^7.0.2",
+    "koa-static": "^5.0.0",
+    "mysql2": "^3.14.1"
+  }
+}

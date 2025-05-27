@@ -1,0 +1,15 @@
+{
+    "SERVER_PORT": 8516,
+    "DATABASE_ENABLED": true,
+    "dataSource": {
+        "HOST": "10.1.123.11",
+        "PORT": 3306,
+        "USERNAME": "dop",
+        "PASSWORD": "QkYI#3Cx",
+        "DATABASE": "icrm_sit"
+    },
+    "visionServer": {
+        "HOST": "opencv.t2.test.noahgrouptest.hk",
+        "LOCALHOST": "10.88.6.37:8000"
+    }
+}

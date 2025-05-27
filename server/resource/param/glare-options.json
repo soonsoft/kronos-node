@@ -1,0 +1,23 @@
+[
+  {
+    "area": 600,
+    "meanSaturation": 30,
+    "edgeStrength": 15,
+    "brightnessGradient": 0.8,
+    "paramId": "01"
+  },
+  {
+    "area": 500,
+    "meanSaturation": 30,
+    "edgeStrength": 40,
+    "brightnessGradient": 0.8,
+    "paramId": "02"
+  },
+  {
+    "area": 500,
+    "meanSaturation": 30,
+    "edgeStrength": 50,
+    "brightnessGradient": 0.8,
+    "paramId": "03"
+  }
+]
