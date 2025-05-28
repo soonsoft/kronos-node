@@ -5,15 +5,14 @@ function componentRender(propertyInfo, depMap, scope) {
     }
 
     function selectRender(options, propertyInfo) {
-        let selectValue = propertyInfo.value + "";
+        let selectValue = propertyInfo.value;
         propertyInfo.value = "";
-        let htmlBuilder = [];
-        htmlBuilder.push(`<option value="">请选择</option>`);
+        let htmlBuilder = [`<option value="">请选择</option>`];
         if(Array.isArray(options)) {
             let optionGroup = {};
             options.forEach(p => {
                 if(selectValue) {
-                    if((p.value + "") === selectValue) {
+                    if(p.value === selectValue) {
                         p.selected = true;
                     } else {
                         p.selected = false;

@@ -53,7 +53,6 @@ templateContent = templateContent.replace('// {{renders}} //', renderContents);
 
 const GodStylePath = path.resolve(__dirname, '../frontend/style/style.css');
 let styleContent = readFile(GodStylePath);
-styleContent = "style.textContent = `\r\n" + styleContent + "\r\n`;";
 templateContent = templateContent.replace('// {{css-style}} //', styleContent);
 
 //#endregion

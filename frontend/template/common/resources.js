@@ -2,7 +2,7 @@ const defaultIcon = "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iaWNvbiIgc3R5bGU9I
 
 const theme = {
     backgroundImage: "https://ts1.tc.mm.bing.net/th?id=OHR.MountHamilton_EN-CN0015074360_1920x1080.webp",
-    primaryColor: "rgb(44, 108, 128)",
+    primaryColor: "rgb(82, 106, 27)",
     fontColor: "#000000",
     panelColor: "rgba(255, 255, 255, .4)",
     panelFontColor: "#000000",

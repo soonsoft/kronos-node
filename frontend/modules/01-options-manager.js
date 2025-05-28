@@ -87,7 +87,14 @@ godInfo.registerModule({
             action: ctx => {
                 let data = ctx.param.data;
                 if(!Array.isArray(data) || data.length === 0) {
-                    ctx.jsonRender("暂无数据");
+                    ctx.jsonRender({
+                        code: 0,
+                        message: "暂无数据",
+                        data: {
+                            name: "暂无数据",
+                            options: []
+                        }
+                    });
                     return;
                 }
                 ctx.tableRender([

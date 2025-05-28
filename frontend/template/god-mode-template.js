@@ -86,7 +86,7 @@
             let subIndex = parseInt(arr[1], 10);
 
             let module = modules[index];
-            if(!isNaN(subIndex)) {
+            if(!Number.isNaN(subIndex)) {
                 module = module.subModules[subIndex];
             }
             return module;
@@ -410,7 +410,7 @@
                     if(e.type === "---") {
                         return;
                     }
-                    if(e.required && (isEmpty(e.value) || isNaN(e.value))) {
+                    if(e.required && (isEmpty(e.value) || Number.isNaN(e.value))) {
                         result.messages.push(`${e.label || e.id}不能为空`);
                     }
                     if(isFunction(e.validate) && !e.validate(e.value)) {
@@ -992,7 +992,7 @@
                                         isFunction(propertyInfo.convertor)
                                             ? propertyInfo.convertor(value, propertyInfo)
                                             : value;
-                                    if(isNaN(propertyInfo.value)) {
+                                    if(Number.isNaN(propertyInfo.value)) {
                                         propertyInfo.value = null;
                                     }
                                     break;
@@ -1011,7 +1011,28 @@
     function insertStyle() {
         const style = document.createElement("style");
         style.rel = "stylesheet";
+        style.textContent = `
+        :root {
+            --background-image: linear-gradient(200deg, rgb(0, 98, 255), rgb(66, 212, 241), rgb(250, 227, 129), rgb(205, 114, 3));
+            --primary-color: ${theme.primaryColor};
+            --font-color: ${theme.fontColor};
+            --panel-color: ${theme.panelColor};
+            --panel-font-color: ${theme.panelFontColor};
+            --panel-border-color: ${theme.panelBorderColor};
+            --menu-item-icon-bg-color: ${theme.menuItemIconBgColor};
+            --menu-item-hover-color: ${theme.menuItemHoverColor};
+            --menu-item-selected-color: ${theme.menuItemSelectedColor};
+            --button-bg-color: ${theme.buttonBgColor};
+            --button-active-bg-color: ${theme.buttonActiveBgColor};
+            --star-color: ${theme.starColor};
+            --textbox-border-color: ${theme.textboxBorderColor};
+            --basic-bg-color: ${theme.basicBgColor};
+            --basic-ft-Color: ${theme.basicFtColor};
+        }
+
         // {{css-style}} //
+        `;
+        
         document.getElementsByTagName("head").item(0).appendChild(style);
     }
     

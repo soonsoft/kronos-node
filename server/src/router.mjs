@@ -1,13 +1,15 @@
 import path from 'path';
 import Router from '@koa/router';
+import { HttpError } from 'koa';
 import { detectGlareBase64, detectGlareBase64_V2 } from './webApi.mjs';
 import { writeJsonToFileAsync, getAllFilePathsAsync, readImageToBase64Async, saveBase64ImageAsync, resolvePath, getFileName, readTextToJsonAsync } from './utils.mjs';
 
 const router = new Router();
 
 // 业务路由
-router.get('/error', () => {
-  throw new HttpException(400, 'Demo Error');
+router.get('/error', ctx => {
+    ctx.throw(400, 'Demo Error');
+  //throw new HttpError<400>('Demo Error');
 });
 
 router.get('/login', function handleLogout(ctx) {
