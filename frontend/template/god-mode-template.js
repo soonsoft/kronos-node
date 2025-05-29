@@ -410,9 +410,25 @@
                     if(e.type === "---") {
                         return;
                     }
-                    if(e.required && (isEmpty(e.value) || Number.isNaN(e.value))) {
-                        result.messages.push(`${e.label || e.id}不能为空`);
+
+                    if(p.required ) {
+                        if(p.type === "file") {
+                            let fileInput = document.getElementById(p.id);
+                            if(fileInput && fileInput.files.length === 0) {
+                                fileInput.value = "";
+                                result.messages.push(`${p.label || p.id}未选择文件`);
+                            }
+                        } else if(p.type === "checkbox") {
+                            if(!Array.isArray(p.value) || p.value.length === 0) {
+                                result.messages.push(`${p.label || p.id}未选择`);
+                            }
+                        } else {
+                            if(isEmpty(p.value) || Number.isNaN(p.value)) {
+                                result.messages.push(`${p.label || p.id}不能为空`);
+                            }
+                        }
                     }
+                    
                     if(isFunction(e.validate) && !e.validate(e.value)) {
                         result.messages.push(`${e.label || e.id}的值不符合要求`);
                     }
