@@ -138,6 +138,13 @@ function componentRender(propertyInfo, depMap, scope) {
         case "hidden":
             htmlBuilder.splice(htmlBuilder.length - 1, 1, `<input id="${propertyId}" type="${propertyInfo.type}" value="${value}"`);
             break;
+        case "color":
+            if(isEmpty(value)) {
+                value = theme.primaryColor;
+                propertyInfo.value = value;
+            }
+            htmlBuilder.push(`<input id="${propertyId}" type="color" value="${value}"`);
+            break;
         default:
             htmlBuilder.push(`<input id="${propertyId}" type="${propertyInfo.type}" data-property-name="${propertyId}" value="${value}"`);
             ["min", "max", "step"].forEach(attr => {
