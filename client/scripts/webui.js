@@ -5,7 +5,7 @@
 
 const theme = {
     backgroundImage: "https://ts1.tc.mm.bing.net/th?id=OHR.MountHamilton_EN-CN0015074360_1920x1080.webp",
-    primaryColor: "rgb(82, 106, 27)",
+    primaryColor: "rgb(16, 150, 239)",
     fontColor: "#000000",
     panelColor: "rgba(255, 255, 255, .4)",
     panelFontColor: "#000000",
@@ -1195,9 +1195,25 @@ async function httpRequest(url, method, data, options) {
                     if(e.type === "---") {
                         return;
                     }
-                    if(e.required && (isEmpty(e.value) || Number.isNaN(e.value))) {
-                        result.messages.push(`${e.label || e.id}不能为空`);
+
+                    if(p.required ) {
+                        if(p.type === "file") {
+                            let fileInput = document.getElementById(p.id);
+                            if(fileInput && fileInput.files.length === 0) {
+                                fileInput.value = "";
+                                result.messages.push(`${p.label || p.id}未选择文件`);
+                            }
+                        } else if(p.type === "checkbox") {
+                            if(!Array.isArray(p.value) || p.value.length === 0) {
+                                result.messages.push(`${p.label || p.id}未选择`);
+                            }
+                        } else {
+                            if(isEmpty(p.value) || Number.isNaN(p.value)) {
+                                result.messages.push(`${p.label || p.id}不能为空`);
+                            }
+                        }
                     }
+                    
                     if(isFunction(e.validate) && !e.validate(e.value)) {
                         result.messages.push(`${e.label || e.id}的值不符合要求`);
                     }
@@ -1626,6 +1642,13 @@ function componentRender(propertyInfo, depMap, scope) {
             break;
         case "hidden":
             htmlBuilder.splice(htmlBuilder.length - 1, 1, `<input id="${propertyId}" type="${propertyInfo.type}" value="${value}"`);
+            break;
+        case "color":
+            if(isEmpty(value)) {
+                value = theme.primaryColor;
+                propertyInfo.value = value;
+            }
+            htmlBuilder.push(`<input id="${propertyId}" type="color" value="${value}"`);
             break;
         default:
             htmlBuilder.push(`<input id="${propertyId}" type="${propertyInfo.type}" data-property-name="${propertyId}" value="${value}"`);
@@ -2457,7 +2480,7 @@ function imageRender() {
             --star-color: ${theme.starColor};
             --textbox-border-color: ${theme.textboxBorderColor};
             --basic-bg-color: ${theme.basicBgColor};
-            --basic-ft-Color: ${theme.basicFtColor};
+            --basic-ft-color: ${theme.basicFtColor};
         }
 
         .app-default {
@@ -2491,7 +2514,7 @@ function imageRender() {
 }
 
 #godHandle:active {
-    background-color: var(--basic-ft-Color);
+    background-color: var(--basic-ft-color);
 }
 
 .god-handle-default {
@@ -2632,7 +2655,7 @@ div.god-panel-show {
         position: absolute;
         width: 100%;
         height: 100%;
-        background-image: url('${theme.backgroundImage}');
+        background-image: var(--background-image);
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -2671,8 +2694,8 @@ div.god-panel-show {
             & button {
                 display: inline-block;
                 position: absolute;
-                width: 14px;
-                height: 14px;
+                width: 12px;
+                height: 12px;
                 overflow: hidden;
                 border: 0;
                 border-radius: 50%;
@@ -2689,7 +2712,7 @@ div.god-panel-show {
             }
 
             & button#yellowButton {
-                left: 32px;
+                left: 30px;
                 background-color: rgb(253, 188, 46);
             }
 
@@ -2698,7 +2721,7 @@ div.god-panel-show {
             }
 
             & button#greenButton {
-                left: 54px;
+                left: 50px;
                 background-color: rgb(40, 200, 64);
             }
 
@@ -3365,7 +3388,7 @@ div.god-panel-show {
                 }
 
                 & .page-text {
-                    color: var(--basic-ft-Color);
+                    color: var(--basic-ft-color);
                 }
 
                 & .page-button-selected {

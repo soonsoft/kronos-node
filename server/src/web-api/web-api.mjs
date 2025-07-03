@@ -1,5 +1,5 @@
-import config from './config.mjs';
-import { newUUID } from './utils.mjs';
+import config from '../config.mjs';
+import { newUUID } from '../utils.mjs';
 
 /**
  * 

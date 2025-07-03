@@ -1043,7 +1043,7 @@
             --star-color: ${theme.starColor};
             --textbox-border-color: ${theme.textboxBorderColor};
             --basic-bg-color: ${theme.basicBgColor};
-            --basic-ft-Color: ${theme.basicFtColor};
+            --basic-ft-color: ${theme.basicFtColor};
         }
 
         // {{css-style}} //

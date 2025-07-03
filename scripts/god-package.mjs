@@ -57,7 +57,7 @@ templateContent = templateContent.replace('// {{css-style}} //', styleContent);
 
 //#endregion
 
-const DistPath = path.resolve(__dirname, '../client/webui.js');
+const DistPath = path.resolve(__dirname, '../client/scripts/webui.js');
 saveFile(DistPath, templateContent);
 
 console.log("package is done.")

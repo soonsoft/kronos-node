@@ -29,7 +29,7 @@
 }
 
 #godHandle:active {
-    background-color: var(--basic-ft-Color);
+    background-color: var(--basic-ft-color);
 }
 
 .god-handle-default {
@@ -170,7 +170,7 @@ div.god-panel-show {
         position: absolute;
         width: 100%;
         height: 100%;
-        background-image: url('${theme.backgroundImage}');
+        background-image: var(--background-image);
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -209,8 +209,8 @@ div.god-panel-show {
             & button {
                 display: inline-block;
                 position: absolute;
-                width: 14px;
-                height: 14px;
+                width: 12px;
+                height: 12px;
                 overflow: hidden;
                 border: 0;
                 border-radius: 50%;
@@ -227,7 +227,7 @@ div.god-panel-show {
             }
 
             & button#yellowButton {
-                left: 32px;
+                left: 30px;
                 background-color: rgb(253, 188, 46);
             }
 
@@ -236,7 +236,7 @@ div.god-panel-show {
             }
 
             & button#greenButton {
-                left: 54px;
+                left: 50px;
                 background-color: rgb(40, 200, 64);
             }
 
@@ -903,7 +903,7 @@ div.god-panel-show {
                 }
 
                 & .page-text {
-                    color: var(--basic-ft-Color);
+                    color: var(--basic-ft-color);
                 }
 
                 & .page-button-selected {
