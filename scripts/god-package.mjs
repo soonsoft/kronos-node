@@ -1,6 +1,7 @@
 import path from "path";
 import { fileURLToPath } from 'url';
 import { readFile, readFilesContent, getAllFilePaths, saveFile } from './file-loader.mjs';
+import { minify } from 'terser';
 
 const __dirname = path.resolve(fileURLToPath(import.meta.url), '../');
 
@@ -60,4 +61,12 @@ templateContent = templateContent.replace('// {{css-style}} //', styleContent);
 const DistPath = path.resolve(__dirname, '../client/scripts/webui.js');
 saveFile(DistPath, templateContent);
 
-console.log("package is done.")
+minify(templateContent).then(minified => {
+    const MinifiedDistPath = path.resolve(__dirname, '../client/scripts/webui.min.js');
+    saveFile(MinifiedDistPath, minified.code);
+    console.log("package is done.");
+}).catch(err => {
+    console.error("Error minifying the script:", err);
+});
+
+

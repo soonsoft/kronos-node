@@ -1,6 +1,6 @@
 {
     "SERVER_PORT": 8516,
-    "DATABASE_ENABLED": true,
+    "DATABASE_ENABLED": false,
     "dataSource": {
         "HOST": "10.1.123.11",
         "PORT": 3306,

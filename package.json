@@ -8,7 +8,8 @@
     "package": "node ./scripts/god-package.mjs",
     "prestart": "node ./scripts/god-package.mjs",
     "start": "node ./server/app.mjs",
-    "test": "node ./server/test/start.mjs"
+    "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest --config ./server/test/jest.config.js",
+    "run": "node ./server/test/start.mjs"
   },
   "author": "",
   "license": "ISC",
@@ -21,5 +22,9 @@
     "koa-session": "^7.0.2",
     "koa-static": "^5.0.0",
     "mysql2": "^3.14.1"
+  },
+  "devDependencies": {
+    "jest": "^30.0.5",
+    "terser": "^5.43.1"
   }
 }

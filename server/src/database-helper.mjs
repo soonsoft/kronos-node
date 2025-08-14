@@ -3,7 +3,7 @@ import config from './config.mjs';
 import { isFunction, isNumber } from './utils.mjs';
 
 const databaseEnabled = config.DATABASE_ENABLED;
-const CHAIN_COMMANDS = new Symbol('CHAIN_COMMANDS');
+const CHAIN_COMMANDS = Symbol('CHAIN_COMMANDS');
 let connectionPool = null;
 
 if(databaseEnabled) {

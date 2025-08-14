@@ -23,3 +23,8 @@ async function verifyJwtToken(token, secretKey) {
         return null;
     }
 }
+
+export { 
+    createJwtToken, 
+    verifyJwtToken 
+};
