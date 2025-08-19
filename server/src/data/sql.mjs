@@ -72,9 +72,9 @@ class SQLCommand {
         };
     }
 
-    if(strings, ...values) {
+    if(predicate) {
         let predicateList = [];
-        return (predicate) => {
+        return (strings, ...values) => {
             let ifClause = new SQLIfClause("", [], predicateList);
             predicateList.push(sqlClause => {
                 if(predicate) {
@@ -128,8 +128,8 @@ class SQLIfClause extends SQLClause {
         this.#predicateList = predicateList || [];
     }
 
-    elseif(strings, ...values) {
-        return (predicate) => {
+    elseif(predicate) {
+        return (strings, ...values) => {
             this.#predicateList.push(sqlClause => {
                 if(predicate) {
                     sqlClause.clause = buildClause(strings, values, sqlClause.parameters);

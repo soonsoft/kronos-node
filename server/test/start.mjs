@@ -34,8 +34,8 @@ let age = 25;
 ifCmd.sql`
     SELECT * FROM users WHERE id = ${id} 
     ${ifCmd
-        .if`AND age = ${age}`(id > 0)
-        .elseif`AND name=${name}`(id === 0)
+        .if(id > 0)`AND age = ${age}`
+        .elseif(id === 0)`AND name=${name}`
         .else`AND name is null`}
 `;
 console.log(`SQL = ${ifCmd.commandText}`); // 输出: SELECT * FROM users WHERE id = 0 AND name is null
