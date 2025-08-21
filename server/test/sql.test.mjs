@@ -72,4 +72,99 @@ describe('SQL 生成器测试', () => {
         expect(text).toBe('SELECT * FROM users WHERE id = ? AND name = ?');
         expect(cmd.parameters).toEqual([id, "John"]);
     });
+
+    describe('insert with values', () => {
+        test('insert with object values', () => {
+            let cmd = new SQLCommand();
+            let user = {
+                name: "Alice",
+                age: 30
+            };
+            cmd.sql`INSERT INTO t_user ${cmd.values(user)}`;
+            expect(cmd.commandText).toBe('INSERT INTO t_user (name, age) VALUES (?, ?)');
+            expect(cmd.parameters).toEqual(['Alice', 30]);
+        });
+
+        test('insert with object values and mapper', () => {
+            let cmd = new SQLCommand();
+            let user = {
+                name: "Alice",
+                age: 30
+            };
+            cmd.sql`INSERT INTO t_user ${cmd.values(user, item => {
+                return {
+                    column: `c_${item.column}`,
+                    value: item.value
+                };
+            })}`;
+            expect(cmd.commandText).toBe('INSERT INTO t_user (c_name, c_age) VALUES (?, ?)');
+            expect(cmd.parameters).toEqual(['Alice', 30]);
+        });
+
+        test('insert with array values', () => {
+            let cmd = new SQLCommand();
+            let user = ["Alice", 30];
+            cmd.sql`INSERT INTO t_user ${cmd.values(user)}`;
+            expect(cmd.commandText).toBe('INSERT INTO t_user VALUES (?, ?)');
+            expect(cmd.parameters).toEqual(['Alice', 30]);
+        });
+
+        test('inset with array values and mapper', () => {
+            let cmd = new SQLCommand();
+            let users = [
+                { name: "Alice"}, { age: 30 }
+            ];
+            cmd.sql`INSERT INTO t_user ${cmd.values(users, item => {
+                let key = Object.keys(item)[0];
+                return {
+                    column: `c_${key}`,
+                    value: item[key]
+                };
+            })}`;
+            expect(cmd.commandText).toBe('INSERT INTO t_user (c_name, c_age) VALUES (?, ?)');
+            expect(cmd.parameters).toEqual(['Alice', 30]);
+        });
+
+        test('insert with single value', () => {
+            let cmd = new SQLCommand();
+            cmd.sql`INSERT INTO t_user ${cmd.values("Alice")}`;
+            expect(cmd.commandText).toBe('INSERT INTO t_user VALUES (?)');
+            expect(cmd.parameters).toEqual(['Alice']);
+        });
+
+        describe('update with sets', () => {
+            test('update with object sets', () => {
+                let cmd = new SQLCommand();
+                let user = {
+                    name: "Alice",
+                    age: 30,
+                    status: null
+                };
+                let id = 1;
+                cmd.sql`UPDATE t_user ${cmd.sets(user)} WHERE id = ${id}`;
+                expect(cmd.commandText).toBe('UPDATE t_user SET name = ?, age = ?, status = ? WHERE id = ?');
+                expect(cmd.parameters).toEqual(['Alice', 30, null, id]);
+            });
+
+            test('update with object sets and mapper', () => {
+                let cmd = new SQLCommand();
+                let user = {
+                    id: 1,
+                    name: "Alice",
+                    age: 30,
+                    status: null
+                };
+                cmd.sql`UPDATE t_user ${cmd.sets(user, item => {
+                    if(item.column !== 'id' && item.value !== null) {
+                        return {
+                            column: `c_${item.column}`,
+                            value: item.value
+                        };
+                    }
+                })} WHERE id = ${user.id}`;
+                expect(cmd.commandText).toBe('UPDATE t_user SET c_name = ?, c_age = ? WHERE id = ?');
+                expect(cmd.parameters).toEqual(['Alice', 30, user.id]);
+            });
+        });
+    });
 });

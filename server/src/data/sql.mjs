@@ -1,3 +1,4 @@
+import { isFunction } from "../utils.mjs";
 
 function buildClause(strings, values, parameters) {
     const result = [strings[0]];
@@ -84,6 +85,84 @@ class SQLCommand {
             });
             return ifClause;
         };
+    }
+
+    values(data, mapper = null) {
+        let columns = [];
+        let values = [];
+
+        function setItem(item) {
+            if(isFunction(mapper)) {
+                item = mapper(item);
+            }
+            if(item.column) {
+                columns.push(item.column);
+            }
+            if(item.value) {
+                values.push(item.value);
+            } else {
+                values.push(item);
+            }
+        }
+
+        if(Array.isArray(data)) {
+            for(let item of data) {
+                setItem(item);
+            }
+        } else if(typeof data === "object") {
+            for(let key in data) {
+                setItem({ column: key, value: data[key] });
+            }
+        } else {
+            setItem(data);
+        }
+
+        let insert = new SQLClause();
+        let result = [];
+        if(columns.length > 0) {
+            result.push(`(${columns.join(", ")})`);
+        }
+        if(values.length > 0) {
+            result.push(`VALUES (${values.map(() => "?").join(", ")})`);
+            insert.addParameters(...values);
+        }
+
+        insert.clause = result.join(" ");
+        return insert;
+    }
+
+    sets(data, mapper = null) {
+        let updateClause = new SQLClause();
+        let sets = [];
+
+        function setItem(item) {
+            if(isFunction(mapper)) {
+                item = mapper(item);
+            }
+            if(item && item.column) {
+                sets.push(`${item.column} = ?`);
+                updateClause.addParameters(item.value);
+            }
+        }
+
+        if(Array.isArray(data)) {
+            for(let item of data) {
+                setItem(item);
+            }
+        } else if(typeof data === "object") {
+            for(let key in data) {
+                setItem({ column: key, value: data[key] });
+            }
+        } else {
+            throw new Error("Invalid data type for sets. Expected object or array.");
+        }
+
+        if(sets.length > 0) {
+            updateClause.clause = `SET ${sets.join(", ")}`;
+        } else {
+            updateClause.clause = "";
+        }
+        return updateClause;
     }
 
     get commandText() {
