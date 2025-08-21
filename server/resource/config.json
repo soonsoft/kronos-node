@@ -2,11 +2,20 @@
     "SERVER_PORT": 8516,
     "DATABASE_ENABLED": false,
     "dataSource": {
-        "HOST": "10.1.123.11",
-        "PORT": 3306,
-        "USERNAME": "dop",
-        "PASSWORD": "QkYI#3Cx",
-        "DATABASE": "icrm_sit"
+        "MySQL": {
+            "HOST": "10.1.123.11",
+            "PORT": 3306,
+            "USERNAME": "dop",
+            "PASSWORD": "QkYI#3Cx",
+            "DATABASE": "icrm_sit"
+        },
+        "PostgreSQL": {
+            "HOST": "218.2.210.142",
+            "PORT": 9935,
+            "USERNAME": "postgres",
+            "PASSWORD": "Free!995",
+            "DATABASE": "cloud_atlas"
+        }
     },
     "visionServer": {
         "HOST": "opencv.t2.test.noahgrouptest.hk",

@@ -1,6 +1,8 @@
 import { isFunction } from "../utils.mjs";
 
-function buildClause(strings, values, parameters) {
+const SQLParameterPlaceholder = "?";
+
+function buildClause(strings, values, parameters, sqlParamGetter) {
     const result = [strings[0]];
     values = Array.isArray(values) ? values : [values];
     for(let i = 0; i < values.length; i++) {
@@ -16,7 +18,7 @@ function buildClause(strings, values, parameters) {
             result.push(value.clause, strings[i + 1]);
             parameters.push(...value.parameters);
         } else {
-            result.push("?", strings[i + 1]);
+            result.push(SQLParameterPlaceholder, strings[i + 1]);
             parameters.push(value);
         }
     }
@@ -26,15 +28,26 @@ function buildClause(strings, values, parameters) {
 class SQLCommand {
     #parameters;
     #commandText;
+    #getSqlParam;
 
-    constructor() {
+    constructor(getSqlParam = null) {
         this.#parameters = [];
         this.#commandText = "";
+        this.#getSqlParam = getSqlParam;
     }
 
     sql(strings, ...values) {
         this.#commandText = buildClause(strings, values, this.#parameters);
-        return this.#commandText;
+        if(this.#getSqlParam && isFunction(this.#getSqlParam)) {
+            let parts = this.#commandText.split(SQLParameterPlaceholder);
+            this.#commandText = parts.map((part, index) => {
+                if(index < parts.length - 1) {
+                    return part + this.#getSqlParam(index);
+                }
+                return part;
+            }).join("");
+        }
+        return this;
     }
 
     in(values) {
@@ -45,7 +58,7 @@ class SQLCommand {
         let result = [];
         let parameters = [];
         for(let value of values) {
-            result.push("?");
+            result.push(SQLParameterPlaceholder);
             parameters.push(value);
         }
 
@@ -54,7 +67,7 @@ class SQLCommand {
     }
 
     between(start, end) {
-        let clause = new SQLClause("BETWEEN ? AND ?");
+        let clause = new SQLClause(`BETWEEN ${SQLParameterPlaceholder} AND ${SQLParameterPlaceholder}`);
         clause.addParameters(start, end);
         return clause;
     }
@@ -123,7 +136,7 @@ class SQLCommand {
             result.push(`(${columns.join(", ")})`);
         }
         if(values.length > 0) {
-            result.push(`VALUES (${values.map(() => "?").join(", ")})`);
+            result.push(`VALUES (${values.map(() => SQLParameterPlaceholder).join(", ")})`);
             insert.addParameters(...values);
         }
 
@@ -140,7 +153,7 @@ class SQLCommand {
                 item = mapper(item);
             }
             if(item && item.column) {
-                sets.push(`${item.column} = ?`);
+                sets.push(`${item.column} = ${SQLParameterPlaceholder}`);
                 updateClause.addParameters(item.value);
             }
         }

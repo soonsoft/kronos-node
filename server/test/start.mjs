@@ -1,3 +1,5 @@
+import config from "../src/config.mjs";
+import { PostgreSQLHelper } from "../src/data/postgresql.mjs";
 import { SQLCommand } from "../src/data/sql.mjs";
 
 // console.log(sql`SELECT * FROM users WHERE id = ${1}`); // 输出: SELECT * FROM users WHERE id = 1
@@ -27,16 +29,23 @@ import { SQLCommand } from "../src/data/sql.mjs";
 // console.log(`SQL = ${betweenCmd.commandText}`); // 输出: SELECT * FROM users WHER    E age between ? and ?
 // console.log(`Parameters = ${JSON.stringify(betweenCmd.parameters)}`); // 输出: Parameters = [18, 30]
 
-let ifCmd = new SQLCommand();
-let id = -1;
-let name = "John";
-let age = 25;
-ifCmd.sql`
-    SELECT * FROM users WHERE id = ${id} 
-    ${ifCmd
-        .if(id > 0)`AND age = ${age}`
-        .elseif(id === 0)`AND name=${name}`
-        .else`AND name is null`}
-`;
-console.log(`SQL = ${ifCmd.commandText}`); // 输出: SELECT * FROM users WHERE id = 0 AND name is null
-console.log(`Parameters = ${JSON.stringify(ifCmd.parameters)}`); // 输出: Parameters = [0, "John"]
+// let ifCmd = new SQLCommand();
+// let id = -1;
+// let name = "John";
+// let age = 25;
+// ifCmd.sql`
+//     SELECT * FROM users WHERE id = ${id} 
+//     ${ifCmd
+//         .if(id > 0)`AND age = ${age}`
+//         .elseif(id === 0)`AND name=${name}`
+//         .else`AND name is null`}
+// `;
+// console.log(`SQL = ${ifCmd.commandText}`); // 输出: SELECT * FROM users WHERE id = 0 AND name is null
+// console.log(`Parameters = ${JSON.stringify(ifCmd.parameters)}`); // 输出: Parameters = [0, "John"]
+
+const dataSource = config.dataSource?.PostgreSQL;
+let dbHelper = new PostgreSQLHelper(dataSource);
+let sql = new SQLCommand((index) => `$${index + 1}`);
+let id = "ccbf0e67-cd91-4e96-8602-d360b9521dcd";
+let result = await dbHelper.query(sql.sql`SELECT * FROM auth_user WHERE user_id = ${id}`);
+console.log(result);

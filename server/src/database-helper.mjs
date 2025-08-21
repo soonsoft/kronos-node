@@ -7,12 +7,13 @@ const CHAIN_COMMANDS = Symbol('CHAIN_COMMANDS');
 let connectionPool = null;
 
 if(databaseEnabled) {
+    const mysqlDataSource = config.dataSource.MySQL || {};
     connectionPool = mysql.createPool({
-        host: config.dataSource.HOST,
-        port: config.dataSource.PORT,
-        user: config.dataSource.USERNAME,
-        password: config.dataSource.PASSWORD,
-        database: config.dataSource.DATABASE,
+        host: mysqlDataSource.HOST,
+        port: mysqlDataSource.PORT,
+        user: mysqlDataSource.USERNAME,
+        password: mysqlDataSource.PASSWORD,
+        database: mysqlDataSource.DATABASE,
         connectionLimit: 10
     });
 }
