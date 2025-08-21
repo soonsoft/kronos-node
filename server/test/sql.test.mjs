@@ -166,5 +166,24 @@ describe('SQL 生成器测试', () => {
                 expect(cmd.parameters).toEqual(['Alice', 30, user.id]);
             });
         });
+
+        describe('delete with where', () => {
+            test('delete with id', () => {
+                let cmd = new SQLCommand();
+                let id = 1;
+                cmd.sql`DELETE FROM t_user WHERE id = ${id}`;
+                expect(cmd.commandText).toBe('DELETE FROM t_user WHERE id = ?');
+                expect(cmd.parameters).toEqual([id]);
+            });
+
+            test('delete with multiple conditions', () => {
+                let cmd = new SQLCommand();
+                let name = "Alice";
+                let age = 30;
+                cmd.sql`DELETE FROM t_user WHERE name = ${name} AND age > ${age}`;
+                expect(cmd.commandText).toBe('DELETE FROM t_user WHERE name = ? AND age > ?');
+                expect(cmd.parameters).toEqual(['Alice', 30]);
+            });
+        });
     });
 });
