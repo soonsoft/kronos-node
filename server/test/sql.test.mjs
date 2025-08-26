@@ -51,14 +51,14 @@ describe('SQL 生成器测试', () => {
 
         test('select with forEach', () => {
             let data = [
-                { name: "Alice", age: 30 },
+                { name: "Ellie", age: 30 },
                 { name: "Bob", age: 25 },
                 { name: "Charlie", age: 35 }
             ];
 
             let cmd = SQL`SELECT * FROM users WHERE ${$forEach`name = ${"name"}`(data, "OR")}`;
             expect(cmd.commandText).toBe('SELECT * FROM users WHERE name = ? OR name = ? OR name = ?');
-            expect(cmd.parameters).toEqual(["Alice", "Bob", "Charlie"]);
+            expect(cmd.parameters).toEqual(["Ellie", "Bob", "Charlie"]);
         });
     });
 
@@ -80,17 +80,17 @@ describe('SQL 生成器测试', () => {
     describe('insert with values', () => {
         test('insert with object values', () => {
             let user = {
-                name: "Alice",
+                name: "Ellie",
                 age: 30
             };
             let cmd = SQL`INSERT INTO t_user ${$values(user)}`;
             expect(cmd.commandText).toBe('INSERT INTO t_user (name, age) VALUES (?, ?)');
-            expect(cmd.parameters).toEqual(['Alice', 30]);
+            expect(cmd.parameters).toEqual(['Ellie', 30]);
         });
 
         test('insert with object values and mapper', () => {
             let user = {
-                name: "Alice",
+                name: "Ellie",
                 age: 30
             };
             let cmd = SQL`INSERT INTO t_user ${$values(user, item => {
@@ -100,19 +100,19 @@ describe('SQL 生成器测试', () => {
                 };
             })}`;
             expect(cmd.commandText).toBe('INSERT INTO t_user (c_name, c_age) VALUES (?, ?)');
-            expect(cmd.parameters).toEqual(['Alice', 30]);
+            expect(cmd.parameters).toEqual(['Ellie', 30]);
         });
 
         test('insert with array values', () => {
-            let user = ["Alice", 30];
+            let user = ["Ellie", 30];
             let cmd = SQL`INSERT INTO t_user ${$values(user)}`;
             expect(cmd.commandText).toBe('INSERT INTO t_user VALUES (?, ?)');
-            expect(cmd.parameters).toEqual(['Alice', 30]);
+            expect(cmd.parameters).toEqual(['Ellie', 30]);
         });
 
         test('inset with array values and mapper', () => {
             let users = [
-                { name: "Alice"}, { age: 30 }
+                { name: "Ellie"}, { age: 30 }
             ];
             let cmd = SQL`INSERT INTO t_user ${$values(users, item => {
                 let key = Object.keys(item)[0];
@@ -122,33 +122,33 @@ describe('SQL 生成器测试', () => {
                 };
             })}`;
             expect(cmd.commandText).toBe('INSERT INTO t_user (c_name, c_age) VALUES (?, ?)');
-            expect(cmd.parameters).toEqual(['Alice', 30]);
+            expect(cmd.parameters).toEqual(['Ellie', 30]);
         });
 
         test('insert with single value', () => {
 
-            let cmd = SQL`INSERT INTO t_user ${$values("Alice")}`;
+            let cmd = SQL`INSERT INTO t_user ${$values("Ellie")}`;
             expect(cmd.commandText).toBe('INSERT INTO t_user VALUES (?)');
-            expect(cmd.parameters).toEqual(['Alice']);
+            expect(cmd.parameters).toEqual(['Ellie']);
         });
 
         describe('update with sets', () => {
             test('update with object sets', () => {
                 let user = {
-                    name: "Alice",
+                    name: "Ellie",
                     age: 30,
                     status: null
                 };
                 let id = 1;
                 let cmd = SQL`UPDATE t_user ${$sets(user)} WHERE id = ${id}`;
                 expect(cmd.commandText).toBe('UPDATE t_user SET name = ?, age = ?, status = ? WHERE id = ?');
-                expect(cmd.parameters).toEqual(['Alice', 30, null, id]);
+                expect(cmd.parameters).toEqual(['Ellie', 30, null, id]);
             });
 
             test('update with object sets and mapper', () => {
                 let user = {
                     id: 1,
-                    name: "Alice",
+                    name: "Ellie",
                     age: 30,
                     status: null
                 };
@@ -161,7 +161,7 @@ describe('SQL 生成器测试', () => {
                     }
                 })} WHERE id = ${user.id}`;
                 expect(cmd.commandText).toBe('UPDATE t_user SET c_name = ?, c_age = ? WHERE id = ?');
-                expect(cmd.parameters).toEqual(['Alice', 30, user.id]);
+                expect(cmd.parameters).toEqual(['Ellie', 30, user.id]);
             });
         });
 
@@ -174,17 +174,17 @@ describe('SQL 生成器测试', () => {
             });
 
             test('delete with multiple conditions', () => {
-                let name = "Alice";
+                let name = "Ellie";
                 let age = 30;
                 let cmd = SQL`DELETE FROM t_user WHERE name = ${name} AND age > ${age}`;
                 expect(cmd.commandText).toBe('DELETE FROM t_user WHERE name = ? AND age > ?');
-                expect(cmd.parameters).toEqual(['Alice', 30]);
+                expect(cmd.parameters).toEqual(['Ellie', 30]);
             });
         });
 
         test('complex sql command', () => {
             let id = 1;
-            let name = "Alice";
+            let name = "Ellie";
             let ageStart = 20;
             let ageEnd = 30;
             let cmd = SQL`
@@ -201,10 +201,10 @@ describe('SQL 生成器测试', () => {
 
         test('change parameters placeholder', () => {
             let id = 1;
-            let name = "Alice";
+            let name = "Ellie";
             let cmd = SQL(index => `$${index + 1}`)`SELECT * FROM users WHERE id = ${id} AND name = ${name}`;
             expect(cmd.commandText).toBe('SELECT * FROM users WHERE id = $1 AND name = $2');
-            expect(cmd.parameters).toEqual([1, "Alice"]);
+            expect(cmd.parameters).toEqual([1, "Ellie"]);
         });
     });
 });
