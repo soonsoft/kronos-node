@@ -1,5 +1,6 @@
 import { jest, test, describe } from '@jest/globals';
 import { SQLCommand, SQL, $in, $between, $forEach, $if, $values, $sets, $clause } from '../src/data/sql.mjs';
+import { isEmpty } from '../src/utils.mjs';
 
 describe('SQL 生成器测试', () => {
     test('select 1', () => {
@@ -179,6 +180,31 @@ describe('SQL 生成器测试', () => {
                 expect(cmd.commandText).toBe('DELETE FROM t_user WHERE name = ? AND age > ?');
                 expect(cmd.parameters).toEqual(['Alice', 30]);
             });
+        });
+
+        test('complex sql command', () => {
+            let id = 1;
+            let name = "Alice";
+            let ageStart = 20;
+            let ageEnd = 30;
+            let cmd = SQL`
+                SELECT * FROM t_user 
+                WHERE id = ${id} 
+                    ${$if(!isEmpty(name))`AND name = ${name}`}
+                    AND age ${$between(ageStart, ageEnd)} 
+                    AND status ${$in([1, 2, 3])}
+            `;
+            let text = cmd.commandText.replace(/\s+/g, ' ').trim();
+            expect(text).toBe('SELECT * FROM t_user WHERE id = ? AND name = ? AND age BETWEEN ? AND ? AND status IN (?, ?, ?)');
+            expect(cmd.parameters).toEqual([id, name, ageStart, ageEnd, 1, 2, 3]);
+        });
+
+        test('change parameters placeholder', () => {
+            let id = 1;
+            let name = "Alice";
+            let cmd = SQL(index => `$${index + 1}`)`SELECT * FROM users WHERE id = ${id} AND name = ${name}`;
+            expect(cmd.commandText).toBe('SELECT * FROM users WHERE id = $1 AND name = $2');
+            expect(cmd.parameters).toEqual([1, "Alice"]);
         });
     });
 });

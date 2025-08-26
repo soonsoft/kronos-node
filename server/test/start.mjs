@@ -1,6 +1,6 @@
 import config from "../src/config.mjs";
 import { PostgreSQLHelper } from "../src/data/postgresql.mjs";
-import { SQLCommand } from "../src/data/sql.mjs";
+import { SQLCommand, SQL, $in, $between, $forEach, $if, $values, $sets, $clause } from "../src/data/sql.mjs";
 
 // console.log(sql`SELECT * FROM users WHERE id = ${1}`); // 输出: SELECT * FROM users WHERE id = 1
 // console.log(sql`SELECT * FROM users WHERE name = ${"John"} AND age > ${30}`); // 输出: SELECT * FROM users WHERE name = 'John' AND age > 30
@@ -45,7 +45,6 @@ import { SQLCommand } from "../src/data/sql.mjs";
 
 const dataSource = config.dataSource?.PostgreSQL;
 let dbHelper = new PostgreSQLHelper(dataSource);
-let sql = new SQLCommand((index) => `$${index + 1}`);
 let id = "ccbf0e67-cd91-4e96-8602-d360b9521dcd";
-let result = await dbHelper.query(sql.sql`SELECT * FROM auth_user WHERE user_id = ${id}`);
+let result = await dbHelper.query(SQL(index => `$${index + 1}`)`SELECT * FROM auth_user WHERE user_id = ${id}`);
 console.log(result);
