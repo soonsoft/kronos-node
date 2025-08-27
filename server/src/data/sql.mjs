@@ -205,6 +205,30 @@ class SQLCommand {
         return this;
     }
 
+    in(values) {
+        return $in(values);
+    }
+
+    between(start, end) {
+        return $between(start, end);
+    }
+
+    forEach(strings, ...values) {
+        return $forEach(strings, ...values);
+    }
+
+    if(predicate) {
+        return $if(predicate);
+    }
+
+    values(data, mapper = null) {
+        return $values(data, mapper);
+    }
+
+    sets(data, mapper = null) {
+        return $sets(data, mapper);
+    }
+
     get commandText() {
         return this.#commandText;
     }
