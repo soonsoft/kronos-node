@@ -46,5 +46,16 @@ import { SQLCommand, SQL, $in, $between, $forEach, $if, $values, $sets, $clause 
 const dataSource = config.dataSource?.PostgreSQL;
 let dbHelper = new PostgreSQLHelper(dataSource);
 let id = "ccbf0e67-cd91-4e96-8602-d360b9521dcd";
-let result = await dbHelper.query(SQL(index => `$${index + 1}`)`SELECT * FROM auth_user WHERE user_id = ${id}`);
-console.log(result);
+let result = await dbHelper.execSelect(SQL(index => `$${index + 1}`)`SELECT * FROM auth_user WHERE user_id = ${id}`);
+console.log("当前数据：", result);
+
+let cellphone = "13800138000";
+result = await dbHelper.execUpdate(SQL(index => `$${index + 1}`)`UPDATE auth_user SET cell_phone = ${cellphone} WHERE user_id = ${id}`);
+console.log("更新结果：", result);
+
+result = await dbHelper.execSelect(SQL(index => `$${index + 1}`)`SELECT * FROM auth_user WHERE user_id = ${id}`);
+console.log("更新后数据：", result);
+
+// 关闭
+dbHelper.dispose();
+
