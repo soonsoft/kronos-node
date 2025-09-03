@@ -1,10 +1,12 @@
 import pg from 'pg';
 import { isEmpty } from '../utils.mjs';
 import { SQLCommand } from './sql.mjs';
+import { execCommand, prepareArguments, createCommandChain } from './database.mjs';
 
 class PostgreSQLHelper {
     #dataSource;
     #connectionPool = null;
+
     constructor(dataSource) {
         this.#dataSource = dataSource;
         this.#connectionPool = new pg.Pool({
@@ -13,7 +15,7 @@ class PostgreSQLHelper {
             user: this.#dataSource.USERNAME,
             password: this.#dataSource.PASSWORD,
             database: this.#dataSource.DATABASE,
-            max: 10
+            max: this.#dataSource.CONNECTION_LIMIT || 10
         });
     }
 
@@ -21,20 +23,8 @@ class PostgreSQLHelper {
         return await this.#connectionPool.connect();
     }
 
-    async execCommand(connection, sql, values) {
-        return await connection.query(sql, values);
-    }
-
-    async execSelect(sql, params, connection = null) {
-        if(sql instanceof SQLCommand) {
-            let cmd = sql;
-            sql = cmd.commandText;
-            params = cmd.parameters;
-        }
-        if(!Array.isArray(params)) {
-            params = isEmpty(params) ? [] : [params];
-        }
-
+    async execSelect(sqlText, params, connection = null) {
+        let { sql, sqlParams } = prepareArguments(sqlText, params);
         let connectionCount = 1;
         try {
             if(!connection) {
@@ -42,7 +32,7 @@ class PostgreSQLHelper {
             } else {
                 connectionCount++;
             }
-            const res = await this.execCommand(connection, sql, params);
+            const res = await execCommand(connection, sql, sqlParams);
             return {
                 data: res.rows,
                 fields: res.fields
@@ -55,16 +45,8 @@ class PostgreSQLHelper {
         }
     }
 
-    async execUpdate(sql, params, connection = null) {
-        if(sql instanceof SQLCommand) {
-            let cmd = sql;
-            sql = cmd.commandText;
-            params = cmd.parameters;
-        }
-        if(!Array.isArray(params)) {
-            params = isEmpty(params) ? [] : [params];
-        }
-
+    async execUpdate(sqlText, params, connection = null) {
+        let { sql, sqlParams } = prepareArguments(sqlText, params);
         let connectionCount = 1;
         try {
             if(!connection) {
@@ -72,7 +54,7 @@ class PostgreSQLHelper {
             } else {
                 connectionCount++;
             }
-            let res = await this.execCommand(connection, sql, params);
+            let res = await execCommand(connection, sql, sqlParams);
             return res.rowCount;
         } finally {
             connectionCount--;
@@ -80,6 +62,10 @@ class PostgreSQLHelper {
                 connection.release();
             }
         }
+    }
+
+    beginTransaction(cmdFn) {
+        return createCommandChain(cmdFn, this);
     }
 
     async dispose() {

@@ -7,14 +7,16 @@
             "PORT": 3306,
             "USERNAME": "dop",
             "PASSWORD": "QkYI#3Cx",
-            "DATABASE": "icrm_sit"
+            "DATABASE": "icrm_sit",
+            "CONNECTION_LIMIT": 20
         },
         "PostgreSQL": {
             "HOST": "218.2.210.142",
             "PORT": 9935,
             "USERNAME": "postgres",
             "PASSWORD": "Free!995",
-            "DATABASE": "cloud_atlas"
+            "DATABASE": "cloud_atlas",
+            "CONNECTION_LIMIT": 20
         }
     },
     "visionServer": {
